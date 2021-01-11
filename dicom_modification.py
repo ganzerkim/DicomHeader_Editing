@@ -23,7 +23,7 @@ import numpy as np
 import pyelastix
 
 
-base_path = 'C:/Users/User/Desktop/snuh'
+base_path = 'C:/Users/User/Desktop/SNUH PETCT Registration/snuh'
 
 
 images_path = base_path + '/origin/'
