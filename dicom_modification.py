@@ -12,29 +12,35 @@ import cv2 as cv
 
 import matplotlib.pylab as plt
 import os
-import seaborn as sns
-from medpy.io import save,load
+#import seaborn as sns
+#from medpy.io import save,load
 #import SimpleITK as sitk
 
-from itk import itkElastixRegistrationMethodPython
-import itk
+#from itk import itkElastixRegistrationMethodPython
+#import itk
 #from itkwidgets import compare, checkerboard
 import numpy as np
-import pyelastix
+#import pyelastix
 
 
 base_path = 'C:/Users/User/Desktop/SNUH PETCT Registration/snuh'
 
 
 images_path = base_path + '/origin/'
-folder_name = listdir(images_path)
+folder_name = sorted(listdir(images_path), key = int)
+
+'''
+baser_path = 'E:\\DeepHisto PET'
+images_pathr = listdir(baser_path)
+'''
 
 
 for i in range(0, len(folder_name)):
-    study_num = listdir(images_path + folder_name[i]) #folder_name loop
+    temp_folder = listdir(images_path + folder_name[i])
+    study_num = listdir(images_path + folder_name[i] + '/' + temp_folder[0]) #folder_name loop
 
     #CT_images_list = [s for s in listdir(images_path + folder_name[i] + '/' + study_num[0]) if isfile(join(images_path + folder_name[i] + '/' + study_num[0], s))]
-    PET_images_list = [s for s in listdir(images_path + folder_name[i] + '/' + study_num[1]) if isfile(join(images_path + folder_name[i] + '/' + study_num[1], s))]
+    PET_images_list = [s for s in listdir(images_path + folder_name[i] + '/' + temp_folder[0] + '/' + study_num[1]) if isfile(join(images_path + folder_name[i] + '/' + temp_folder[0] + '/' + study_num[1], s))]
 
 
     #print('The Number of Registration CT images', len(CT_images_list))
@@ -53,11 +59,11 @@ for i in range(0, len(folder_name)):
 
     
 
-    dcm_p = pydicom.dcmread(images_path + folder_name[i] + '/' + study_num[1] + '/' + PET_images_list[50])
+    dcm_p = pydicom.dcmread(images_path + folder_name[i] + '/' + temp_folder[0] + '/' + study_num[1] + '/' + PET_images_list[50])
     
     
     reg_images_path = base_path + '/regist/'
-    reg_folder = listdir(reg_images_path)
+    reg_folder = sorted(listdir(reg_images_path), key = int)
     reg_num = listdir(reg_images_path + reg_folder[i]) 
     reg_images_list = [s for s in listdir(reg_images_path + reg_folder[i] + '/' + reg_num[0]) if isfile(join(reg_images_path + reg_folder[i] + '/' + reg_num[0], s))]
     
@@ -87,16 +93,23 @@ for i in range(0, len(folder_name)):
         savedir = os.path.join(base_path + '/regist_header')
         if not(os.path.exists(savedir)):
             os.mkdir(savedir)
-        savedir2 = os.path.join(savedir + '/' + str(reg_folder[i]))
+        savedir2 = os.path.join(savedir + '/' + str(folder_name[i]))
         if not(os.path.exists(savedir2)):
             os.mkdir(savedir2)
         
         dcm_reg.save_as(savedir2 + '/' + str(idx + 1) + '_header.dcm')
         print(idx)
-        
-        
+
+#%%     
+'''
+from os import listdir
+from os.path import isfile, join
+files = [f for f in listdir('filepath') if isfile(join('filepath', f))]
 
 
+files = [x for x in files if x.find("mdb") != -1] files #특정 문구포함.
+'''
+#%%
 '''
 (0054,0016) SQ                                                   # 0, 0 egg
       (0018,0031) LO Fluorodeoxyglucose                                # 1, 18 Radiopharmaceutical
